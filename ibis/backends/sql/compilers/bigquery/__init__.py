@@ -134,7 +134,6 @@ class BigQueryCompiler(SQLGlotCompiler):
         ops.ExtractAuthority,
         ops.ExtractUserInfo,
         ops.FindInSet,
-        ops.Median,
         ops.RegexSplit,
         ops.RowID,
         ops.TimestampDiff,
@@ -362,6 +361,13 @@ class BigQueryCompiler(SQLGlotCompiler):
 
     def visit_ApproxMedian(self, op, *, arg, where):
         return self.agg.approx_quantiles(arg, 2, where=where)[self.f.offset(1)]
+
+    def visit_Median(self, op, *, arg, where):
+        if where is not None:
+            arg = self.if_(where, arg, NULL)
+        # PERCENTILE_CONT is an analytic function in BigQuery
+        return self.f.percentile_cont(arg, 0.5)
+
 
     def visit_Pi(self, op):
         return self.f.acos(-1)

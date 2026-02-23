@@ -1201,7 +1201,7 @@ def test_approx_median(alltypes):
 
 
 @pytest.mark.notimpl(
-    ["bigquery", "druid", "sqlite"], raises=com.OperationNotDefinedError
+    ["druid", "sqlite"], raises=com.OperationNotDefinedError
 )
 @pytest.mark.notyet(
     ["impala", "mysql", "singlestoredb", "mssql", "druid", "trino", "athena"],
